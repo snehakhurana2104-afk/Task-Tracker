@@ -1,0 +1,796 @@
+/* ==========================================
+   PROFILE PAGE - PART 1
+   Layout + Header + Employee Cards
+========================================== */
+
+.profile-container{
+    width:100%;
+    min-height:100vh;
+    padding:30px;
+    background:#f5f7fb;
+}
+
+/* ===========================
+   Back Button
+=========================== */
+
+.back-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 22px;
+    border:none;
+    border-radius:12px;
+    background:#2563eb;
+    color:#fff;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+    margin-bottom:25px;
+    box-shadow:0 8px 20px rgba(37,99,235,.18);
+}
+
+.back-btn:hover{
+    background:#1d4ed8;
+    transform:translateY(-2px);
+}
+
+/* ===========================
+   Header
+=========================== */
+
+.profile-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:35px;
+}
+
+.profile-header h1{
+    font-size:34px;
+    font-weight:700;
+    color:#1e293b;
+    margin-bottom:8px;
+}
+
+.profile-header p{
+    color:#64748b;
+    font-size:15px;
+    line-height:24px;
+}
+
+/* ===========================
+   Employee Cards
+=========================== */
+
+.employee-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:22px;
+    margin-bottom:40px;
+}
+
+.employee-card{
+    background:#fff;
+    border-radius:20px;
+    padding:24px;
+    cursor:pointer;
+    transition:.35s;
+    border:1px solid #edf2f7;
+    box-shadow:0 10px 25px rgba(15,23,42,.05);
+}
+
+.employee-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 18px 40px rgba(0,0,0,.12);
+}
+
+.employee-card.active{
+    border:2px solid #2563eb;
+    background:#eff6ff;
+}
+
+.employee-avatar{
+    width:75px;
+    height:75px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#3b82f6,#2563eb);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:#fff;
+    font-size:38px;
+    margin-bottom:18px;
+}
+
+.employee-content h3{
+    font-size:21px;
+    color:#1e293b;
+    margin-bottom:6px;
+}
+
+.employee-content p{
+    color:#64748b;
+    font-size:14px;
+    margin-bottom:18px;
+}
+
+.employee-footer{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:#2563eb;
+    font-weight:600;
+    font-size:14px;
+}
+
+.employee-footer svg{
+    font-size:16px;
+}
+
+/* ===========================
+   Empty State
+=========================== */
+
+.no-profile{
+    background:#fff;
+    padding:70px 40px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
+}
+
+.no-profile h2{
+    font-size:30px;
+    color:#1e293b;
+    margin-bottom:25px;
+}
+
+/* ===========================
+   Section Titles
+=========================== */
+
+.section-title{
+    font-size:24px;
+    font-weight:700;
+    color:#1e293b;
+    margin:35px 0 20px;
+}
+
+/* ===========================
+   Common Card
+=========================== */
+
+.card{
+    background:#fff;
+    border-radius:18px;
+    padding:24px;
+    border:1px solid #edf2f7;
+    box-shadow:0 10px 25px rgba(15,23,42,.05);
+}
+/* ==========================================
+   PROFILE PAGE - PART 2
+   Dashboard + Performance + Stats
+========================================== */
+
+/* ===========================
+   Dashboard Layout
+=========================== */
+
+.profile-dashboard{
+    display:grid;
+    grid-template-columns:1.2fr .8fr;
+    gap:25px;
+    margin-bottom:35px;
+}
+
+/* ===========================
+   Profile Card
+=========================== */
+
+.profile-card{
+    background:#ffffff;
+    border-radius:20px;
+    padding:28px;
+    box-shadow:0 12px 30px rgba(15,23,42,.06);
+    border:1px solid #e5e7eb;
+}
+
+.profile-top{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.profile-avatar-large{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#2563eb,#3b82f6);
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:38px;
+    font-weight:700;
+    box-shadow:0 12px 25px rgba(37,99,235,.25);
+}
+
+.profile-info h2{
+    font-size:28px;
+    color:#0f172a;
+    margin-bottom:6px;
+}
+
+.profile-info p{
+    color:#64748b;
+    font-size:15px;
+}
+
+.profile-divider{
+    width:100%;
+    height:1px;
+    background:#e5e7eb;
+    margin:24px 0;
+}
+
+/* ===========================
+   Mini Stats
+=========================== */
+
+.profile-stats-mini{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.mini-box{
+    background:#f8fafc;
+    border-radius:14px;
+    padding:18px;
+    text-align:center;
+    transition:.3s;
+}
+
+.mini-box:hover{
+    transform:translateY(-4px);
+    background:#eff6ff;
+}
+
+.mini-box span{
+    display:block;
+    color:#64748b;
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+.mini-box h3{
+    color:#2563eb;
+    font-size:24px;
+    font-weight:700;
+}
+
+/* ===========================
+   Performance Banner
+=========================== */
+
+.performance-banner{
+    border-radius:20px;
+    padding:30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:linear-gradient(135deg,#2563eb,#4f46e5);
+    color:#fff;
+    box-shadow:0 15px 35px rgba(79,70,229,.25);
+}
+
+.performance-left{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.performance-icon{
+    width:70px;
+    height:70px;
+    border-radius:18px;
+    background:rgba(255,255,255,.18);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:32px;
+}
+
+.performance-left h4{
+    font-size:22px;
+    margin-bottom:6px;
+}
+
+.performance-left p{
+    opacity:.9;
+    font-size:14px;
+}
+
+.performance-right h1{
+    font-size:60px;
+    font-weight:700;
+}
+
+/* ===========================
+   Statistics Grid
+=========================== */
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:22px;
+    margin-bottom:35px;
+}
+
+/* ===========================
+   Stats Card
+=========================== */
+
+.stats-card{
+    background:#fff;
+    border-radius:18px;
+    padding:22px;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    transition:.35s;
+    border:1px solid #e5e7eb;
+    box-shadow:0 8px 20px rgba(0,0,0,.05);
+}
+
+.stats-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 18px 35px rgba(0,0,0,.10);
+}
+
+.stats-icon{
+    width:58px;
+    height:58px;
+    border-radius:16px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:24px;
+    color:#fff;
+}
+
+.stats-card h4{
+    color:#64748b;
+    font-size:14px;
+    margin-bottom:6px;
+}
+
+.stats-card h2{
+    color:#0f172a;
+    font-size:28px;
+    font-weight:700;
+}
+
+/* ===========================
+   Card Colors
+=========================== */
+
+.blue .stats-icon{
+    background:#2563eb;
+}
+
+.green .stats-icon{
+    background:#16a34a;
+}
+
+.orange .stats-icon{
+    background:#f59e0b;
+}
+
+.red .stats-icon{
+    background:#ef4444;
+}
+
+.purple .stats-icon{
+    background:#7c3aed;
+}
+
+.cyan .stats-icon{
+    background:#06b6d4;
+}
+
+.blue{
+    border-left:5px solid #2563eb;
+}
+
+.green{
+    border-left:5px solid #16a34a;
+}
+
+.orange{
+    border-left:5px solid #f59e0b;
+}
+
+.red{
+    border-left:5px solid #ef4444;
+}
+
+.purple{
+    border-left:5px solid #7c3aed;
+}
+
+.cyan{
+    border-left:5px solid #06b6d4;
+}
+/* ==========================================
+   PROFILE PAGE - PART 3
+   Charts + Progress + Summary
+==========================================*/
+
+/* ===========================
+   Charts Grid
+=========================== */
+
+.charts-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
+    gap:25px;
+    margin-bottom:35px;
+}
+
+/* ===========================
+   Common Chart Card
+=========================== */
+
+.chart-card,
+.progress-card{
+    background:#fff;
+    border-radius:20px;
+    padding:25px;
+    border:1px solid #e5e7eb;
+    box-shadow:0 10px 25px rgba(0,0,0,.05);
+    transition:.35s;
+}
+
+.chart-card:hover,
+.progress-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 20px 40px rgba(0,0,0,.08);
+}
+
+/* ===========================
+   Chart Header
+=========================== */
+
+.chart-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.chart-header h3{
+    font-size:20px;
+    color:#0f172a;
+    font-weight:700;
+}
+
+.chart-header span{
+    font-size:14px;
+    color:#64748b;
+}/* ==========================================
+   PROFILE PAGE - PART 4
+   Recent Tasks + Timeline + Summary + Responsive
+==========================================*/
+
+/* ===========================
+   Recent Tasks
+=========================== */
+
+.recent-task-card,
+.timeline-card,
+.summary-card{
+    background:#fff;
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:30px;
+    border:1px solid #e5e7eb;
+    box-shadow:0 10px 25px rgba(0,0,0,.05);
+}
+
+.section-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.section-header h2,
+.timeline-card h2,
+.summary-card h2{
+    font-size:24px;
+    color:#0f172a;
+    font-weight:700;
+}
+
+/* ===========================
+   Export Button
+=========================== */
+
+.export-btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:#2563eb;
+    color:#fff;
+    border:none;
+    padding:10px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.3s;
+}
+
+.export-btn:hover{
+    background:#1d4ed8;
+    transform:translateY(-2px);
+}
+
+/* ===========================
+   Table
+=========================== */
+
+.task-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.task-table thead{
+    background:#f8fafc;
+}
+
+.task-table th{
+    padding:16px;
+    text-align:left;
+    font-size:14px;
+    color:#475569;
+    font-weight:700;
+}
+
+.task-table td{
+    padding:16px;
+    border-top:1px solid #e5e7eb;
+    color:#334155;
+    font-size:14px;
+}
+
+.task-table tbody tr{
+    transition:.25s;
+}
+
+.task-table tbody tr:hover{
+    background:#f8fafc;
+}
+
+.no-task{
+    text-align:center;
+    padding:35px;
+    color:#94a3b8;
+    font-weight:600;
+}
+
+/* ===========================
+   Priority Badge
+=========================== */
+
+.priority-badge{
+    display:inline-block;
+    padding:6px 14px;
+    border-radius:20px;
+    color:#fff;
+    font-size:12px;
+    font-weight:600;
+}
+
+.priority-badge.high{
+    background:#ef4444;
+}
+
+.priority-badge.medium{
+    background:#f59e0b;
+}
+
+.priority-badge.low{
+    background:#10b981;
+}
+
+/* ===========================
+   Status Badge
+=========================== */
+
+.status-badge{
+    display:inline-block;
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.status-badge.closed{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.status-badge.progress{
+    background:#dbeafe;
+    color:#2563eb;
+}
+
+.status-badge.pending{
+    background:#fee2e2;
+    color:#dc2626;
+}
+
+/* ===========================
+   Timeline
+=========================== */
+
+.timeline{
+    position:relative;
+    padding-left:25px;
+}
+
+.timeline::before{
+    content:"";
+    position:absolute;
+    left:8px;
+    top:0;
+    width:2px;
+    height:100%;
+    background:#dbeafe;
+}
+
+.timeline-item{
+    display:flex;
+    gap:18px;
+    margin-bottom:25px;
+    position:relative;
+}
+
+.timeline-dot{
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    background:#2563eb;
+    position:absolute;
+    left:-24px;
+    top:6px;
+    border:3px solid #fff;
+    box-shadow:0 0 0 3px #bfdbfe;
+}
+
+.timeline-content{
+    width:100%;
+    background:#f8fafc;
+    padding:18px;
+    border-radius:14px;
+}
+
+.timeline-content h4{
+    font-size:17px;
+    color:#0f172a;
+    margin-bottom:8px;
+}
+
+.timeline-content p{
+    color:#64748b;
+    margin-bottom:12px;
+    font-size:14px;
+}
+
+/* ===========================
+   Summary
+=========================== */
+
+.summary-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:20px;
+}
+
+.summary-box{
+    background:#f8fafc;
+    border-radius:16px;
+    text-align:center;
+    padding:25px;
+    transition:.3s;
+}
+
+.summary-box:hover{
+    background:#eff6ff;
+    transform:translateY(-4px);
+}
+
+.summary-box span{
+    display:block;
+    color:#64748b;
+    margin-bottom:10px;
+    font-size:14px;
+}
+
+.summary-box h2{
+    font-size:30px;
+    color:#2563eb;
+    font-weight:700;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media(max-width:1024px){
+
+    .profile-dashboard{
+        grid-template-columns:1fr;
+    }
+
+    .charts-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .profile-container{
+        padding:20px;
+    }
+
+    .employee-grid{
+        grid-template-columns:1fr;
+    }
+
+    .profile-stats-mini{
+        grid-template-columns:1fr;
+    }
+
+    .stats-grid{
+        grid-template-columns:1fr;
+    }
+
+    .summary-grid{
+        grid-template-columns:1fr;
+    }
+
+    .section-header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+
+    .task-table{
+        display:block;
+        overflow-x:auto;
+    }
+
+}
+
+@media(max-width:480px){
+
+    .profile-header h1{
+        font-size:26px;
+    }
+
+    .performance-right h1{
+        font-size:42px;
+    }
+
+    .profile-avatar-large{
+        width:70px;
+        height:70px;
+        font-size:28px;
+    }
+
+}
