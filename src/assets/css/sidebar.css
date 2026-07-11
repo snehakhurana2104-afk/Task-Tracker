@@ -1,0 +1,152 @@
+/* ===========================
+   SIDEBAR
+=========================== */
+
+.sidebar{
+    width:270px;
+    min-height:100vh;
+    background:#0f172a;
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    padding:25px 18px;
+    box-shadow:8px 0 25px rgba(0,0,0,.12);
+}
+
+/* ===========================
+   LOGO
+=========================== */
+
+.logo-section{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.sidebar-logo{
+    width:130px;
+    margin-bottom:15px;
+}
+
+.sidebar-title{
+    font-size:22px;
+    font-weight:700;
+    margin-bottom:5px;
+}
+
+.sidebar-subtitle{
+    font-size:13px;
+    color:#94a3b8;
+}
+
+/* ===========================
+   MENU
+=========================== */
+
+.sidebar-menu{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.nav-item{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:14px 18px;
+    text-decoration:none;
+    color:#cbd5e1;
+    border-radius:12px;
+    transition:.3s;
+    font-size:15px;
+    font-weight:500;
+}
+
+.nav-item:hover{
+    background:#2563eb;
+    color:white;
+    transform:translateX(5px);
+}
+
+.nav-item.active{
+    background:#2563eb;
+    color:white;
+}
+
+.nav-item svg{
+    flex-shrink:0;
+}
+
+/* ===========================
+   FOOTER
+=========================== */
+
+.sidebar-footer{
+    margin-top:auto;
+    border-top:1px solid rgba(255,255,255,.08);
+    padding-top:20px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.logout:hover{
+    background:#ef4444;
+}
+
+/* ===========================
+   SCROLLBAR
+=========================== */
+
+.sidebar::-webkit-scrollbar{
+    width:6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb{
+    background:#334155;
+    border-radius:20px;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:900px){
+
+.sidebar{
+    width:220px;
+}
+
+.sidebar-title{
+    font-size:18px;
+}
+
+.nav-item{
+    font-size:14px;
+    padding:12px 14px;
+}
+
+}
+
+@media(max-width:768px){
+
+.sidebar{
+    width:80px;
+    padding:20px 10px;
+}
+
+.sidebar-title,
+.sidebar-subtitle,
+.nav-item span{
+    display:none;
+}
+
+.nav-item{
+    justify-content:center;
+    padding:14px;
+}
+
+.sidebar-logo{
+    width:50px;
+}
+
+}

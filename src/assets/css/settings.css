@@ -1,0 +1,597 @@
+/* ==========================================
+   SETTINGS PAGE
+========================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Inter","Segoe UI",sans-serif;
+}
+
+/* ==========================================
+   MAIN CONTAINER
+========================================== */
+
+.settings{
+
+    min-height:100vh;
+
+    padding:25px;
+
+    background:#f5f7fb;
+
+    color:#1e293b;
+
+    transition:.35s;
+
+}
+
+.settings.dark{
+
+    background:#111827;
+
+    color:#ffffff;
+
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.settings-header{
+
+    margin-bottom:30px;
+
+}
+
+.settings-header h1{
+
+    font-size:34px;
+
+    font-weight:700;
+
+    margin-bottom:8px;
+
+}
+
+.settings-header p{
+
+    color:#64748b;
+
+    font-size:15px;
+
+}
+
+.settings.dark .settings-header p{
+
+    color:#cbd5e1;
+
+}
+
+/* ==========================================
+   SETTINGS CARD
+========================================== */
+
+.settings-card{
+
+    background:#ffffff;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    margin-bottom:25px;
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.settings-card:hover{
+
+    transform:translateY(-4px);
+
+}
+
+.settings.dark .settings-card{
+
+    background:#1f2937;
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,.35);
+
+}
+
+/* ==========================================
+   CARD TITLE
+========================================== */
+
+.setting-title{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-bottom:22px;
+
+}
+
+.setting-title svg{
+
+    color:#2563eb;
+
+}
+
+.setting-title h3{
+
+    font-size:22px;
+
+    font-weight:700;
+
+}
+/* ==========================================
+   SETTING ROW
+========================================== */
+
+.setting-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:18px 0;
+
+    border-bottom:1px solid #e5e7eb;
+
+    transition:.3s;
+
+}
+
+.setting-row:last-child{
+
+    border-bottom:none;
+
+}
+
+.settings.dark .setting-row{
+
+    border-color:#374151;
+
+}
+
+.setting-row span{
+
+    font-size:16px;
+
+    font-weight:600;
+
+}
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+.toggle-btn,
+.profile-btn,
+.save-btn{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    border:none;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+/* ==========================================
+   DARK MODE BUTTON
+========================================== */
+
+.toggle-btn{
+
+    min-width:170px;
+
+    padding:12px 18px;
+
+    border-radius:12px;
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+.toggle-btn:hover{
+
+    background:#1d4ed8;
+
+    transform:translateY(-2px);
+
+}
+
+.toggle-btn.active{
+
+    background:#111827;
+
+    color:#fff;
+
+}
+
+.settings.dark .toggle-btn.active{
+
+    background:#f3f4f6;
+
+    color:#111827;
+
+}
+
+/* ==========================================
+   PROFILE BUTTON
+========================================== */
+
+.profile-btn{
+
+    padding:10px 18px;
+
+    border-radius:12px;
+
+    background:#10b981;
+
+    color:white;
+
+}
+
+.profile-btn:hover{
+
+    background:#059669;
+
+    transform:translateY(-2px);
+
+}
+
+/* ==========================================
+   SELECT
+========================================== */
+
+.setting-row select{
+
+    min-width:180px;
+
+    padding:10px 14px;
+
+    border-radius:10px;
+
+    border:1px solid #d1d5db;
+
+    outline:none;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+    background:#ffffff;
+
+}
+
+.settings.dark .setting-row select{
+
+    background:#374151;
+
+    color:white;
+
+    border:none;
+
+}
+
+/* ==========================================
+   CHECKBOX
+========================================== */
+
+.setting-row input[type="checkbox"]{
+
+    width:22px;
+
+    height:22px;
+
+    accent-color:#2563eb;
+
+    cursor:pointer;
+
+}
+
+/* ==========================================
+   MAIL BOX
+========================================== */
+
+.mail-box{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+    padding:10px 16px;
+
+    border-radius:12px;
+
+    font-weight:600;
+
+}
+
+.settings.dark .mail-box{
+
+    background:#374151;
+
+    color:white;
+
+}
+/* ==========================================
+   SAVE BUTTON
+========================================== */
+
+.save-section{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    margin-top:25px;
+
+}
+
+.save-btn{
+
+    padding:14px 30px;
+
+    border-radius:14px;
+
+    background:linear-gradient(
+        135deg,
+        #2563eb,
+        #7c3aed
+    );
+
+    color:white;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.save-btn:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 10px 25px rgba(37,99,235,.35);
+
+}
+
+/* ==========================================
+   SCROLLBAR
+========================================== */
+
+::-webkit-scrollbar{
+
+    width:8px;
+
+    height:8px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#e5e7eb;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#2563eb;
+
+    border-radius:10px;
+
+}
+
+.settings.dark ::-webkit-scrollbar-track{
+
+    background:#1f2937;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width:992px){
+
+.settings{
+
+padding:20px;
+
+}
+
+.setting-row{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+gap:15px;
+
+}
+
+.setting-row select,
+.toggle-btn,
+.profile-btn{
+
+width:100%;
+
+justify-content:center;
+
+}
+
+.mail-box{
+
+width:100%;
+
+justify-content:center;
+
+}
+
+.save-section{
+
+justify-content:center;
+
+}
+
+.save-btn{
+
+width:100%;
+
+justify-content:center;
+
+}
+
+}
+
+@media (max-width:768px){
+
+.settings-header h1{
+
+font-size:28px;
+
+}
+
+.settings-card{
+
+padding:20px;
+
+}
+
+.setting-title h3{
+
+font-size:20px;
+
+}
+
+.setting-row span{
+
+font-size:15px;
+
+}
+
+}
+
+@media (max-width:480px){
+
+.settings{
+
+padding:15px;
+
+}
+
+.settings-header h1{
+
+font-size:24px;
+
+}
+
+.settings-header p{
+
+font-size:14px;
+
+}
+
+.setting-title{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+gap:8px;
+
+}
+
+.setting-title h3{
+
+font-size:18px;
+
+}
+
+.setting-row{
+
+padding:15px 0;
+
+}
+
+.setting-row select{
+
+width:100%;
+
+min-width:auto;
+
+}
+
+.toggle-btn,
+.profile-btn,
+.save-btn{
+
+font-size:14px;
+
+padding:12px 16px;
+
+}
+
+.mail-box{
+
+font-size:14px;
+
+text-align:center;
+
+word-break:break-word;
+
+}
+
+}
+
+/* ==========================================
+   SMOOTH TRANSITION
+========================================== */
+
+.settings,
+.settings-card,
+.setting-row,
+.toggle-btn,
+.profile-btn,
+.save-btn,
+.mail-box,
+.setting-row select{
+
+transition:all .3s ease;
+
+}
