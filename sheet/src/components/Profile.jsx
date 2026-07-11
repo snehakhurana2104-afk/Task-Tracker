@@ -1,8 +1,3 @@
-// ================================
-// Profile.jsx (Part 1)
-// Imports + Hooks + Employee Cards
-// ================================
-
 import React, { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -38,36 +33,38 @@ const COLORS = [
 function Profile({ profileData = [] }) {
 
   const navigate = useNavigate();
+  const { name } = useParams();
 
-const { name } = useParams();
+  // ==========================
+  // Selected Employee
+  // ==========================
 
-const employee = useMemo(() => {
-  if (!profileData || profileData.length === 0) {
-    return null;
-  }
+  const employee = useMemo(() => {
 
-  // Sidebar se /profile open hua
-  if (!name) {
-    return profileData[0];
-  }
+    if (!profileData || profileData.length === 0) {
+      return null;
+    }
 
-  return (
-    profileData.find(
-      (emp) =>
-        emp.name?.trim().toLowerCase() ===
-        decodeURIComponent(name)
-          .trim()
-          .toLowerCase()
-    ) || null
-  );
-}, [name, profileData]);
+    if (!name) {
+      return profileData[0];
+    }
 
-console.log("Profile Data:", profileData);
-console.log("URL Name:", name);
-console.log("Selected Employee:", employee);
+    return (
+      profileData.find(
+        (emp) =>
+          emp.name?.trim().toLowerCase() ===
+          decodeURIComponent(name)
+            .trim()
+            .toLowerCase()
+      ) || null
+    );
+
+  }, [profileData, name]);
+
+  console.log("Profile Data :", profileData);
+  console.log("Employee :", employee);
 
   if (!employee) {
-
     return (
       <div className="profile-container">
 
@@ -80,62 +77,78 @@ console.log("Selected Employee:", employee);
             onClick={() => navigate("/team")}
           >
             <FaArrowLeft />
-            Back To Team
+            <span>Back To Team</span>
           </button>
 
         </div>
+
       </div>
     );
-
   }
 
   // ==========================
   // Chart Data
   // ==========================
 
-  const pieData = [
+  const completedTasks =
+    employee.tasks?.filter(
+      (task) => task.remarks === "Closed"
+    ).length || 0;
 
+  const pendingTasks =
+    employee.tasks?.filter(
+      (task) => task.remarks !== "Closed"
+    ).length || 0;
+
+  const totalTasks =
+    employee.tasks?.length || 0;
+
+  const completionRate =
+    totalTasks === 0
+      ? 0
+      : Math.round(
+          (completedTasks / totalTasks) * 100
+        );
+
+  const pieData = [
     {
       name: "Completed",
-      value:
-        employee.tasks?.filter(
-          (task) => task.remarks === "Closed"
-        ).length || 0,
+      value: completedTasks,
     },
-
     {
       name: "Pending",
-      value:
-        employee.tasks?.filter(
-          (task) => task.remarks !== "Closed"
-        ).length || 0,
+      value: pendingTasks,
     },
-
   ];
 
-  // ==========================
-  // Performance %
-  // ==========================
-
-  const completionRate = Math.round(
-
-    ((employee.tasks?.filter(
-      (task) => task.remarks === "Closed"
-    ).length || 0) /
-
-      (employee.tasks?.length || 1)) * 100
-
-  );
-
-  // ==========================
-  // JSX Starts
-  // ==========================
+  const priorityData = [
+    {
+      priority: "High",
+      tasks:
+        employee.tasks?.filter(
+          (task) => task.priority === "High"
+        ).length || 0,
+    },
+    {
+      priority: "Medium",
+      tasks:
+        employee.tasks?.filter(
+          (task) => task.priority === "Medium"
+        ).length || 0,
+    },
+    {
+      priority: "Low",
+      tasks:
+        employee.tasks?.filter(
+          (task) => task.priority === "Low"
+        ).length || 0,
+    },
+  ];
 
   return (
 
     <div className="profile-container">
-
-      {/* ========================= */}
+            {/* ========================= */}
       {/* Back Button */}
       {/* ========================= */}
 
@@ -143,11 +156,8 @@ console.log("Selected Employee:", employee);
         className="back-btn"
         onClick={() => navigate("/team")}
       >
-
         <FaArrowLeft />
-
         <span>Back</span>
-
       </button>
 
       {/* ========================= */}
@@ -158,11 +168,10 @@ console.log("Selected Employee:", employee);
 
         <div>
 
-          <h1>Employee Profiles</h1>
+          <h1>Employee Profile</h1>
 
           <p>
-            Select any employee card to
-            view complete profile analytics.
+            View employee details, analytics and performance dashboard.
           </p>
 
         </div>
@@ -180,19 +189,15 @@ console.log("Selected Employee:", employee);
           <div
             key={emp.name}
             className={`employee-card ${
-              emp.name === employee.name
-                ? "active"
-                : ""
+              emp.name === employee.name ? "active" : ""
             }`}
             onClick={() =>
-              navigate(`/profile/${emp.name}`)
+              navigate(`/profile/${encodeURIComponent(emp.name)}`)
             }
           >
 
             <div className="employee-avatar">
-
               <FaUserCircle />
-
             </div>
 
             <div className="employee-content">
@@ -200,10 +205,7 @@ console.log("Selected Employee:", employee);
               <h3>{emp.name}</h3>
 
               <p>
-
-                {emp.tasks?.[0]?.department ||
-                  "Department"}
-
+                {emp.department || "Department"}
               </p>
 
               <div className="employee-footer">
@@ -211,9 +213,7 @@ console.log("Selected Employee:", employee);
                 <FaTasks />
 
                 <span>
-
                   {emp.tasks?.length || 0} Tasks
-
                 </span>
 
               </div>
@@ -227,10 +227,6 @@ console.log("Selected Employee:", employee);
       </div>
 
       {/* ========================= */}
-      {/* Part 2 Starts Here */}
-      {/* Profile Dashboard */}
-      {/* ========================= */}
-            {/* ========================= */}
       {/* Profile Dashboard */}
       {/* ========================= */}
 
@@ -244,7 +240,7 @@ console.log("Selected Employee:", employee);
 
             <div className="profile-avatar-large">
 
-              {employee.name.charAt(0).toUpperCase()}
+              {employee.name?.charAt(0).toUpperCase()}
 
             </div>
 
@@ -252,9 +248,9 @@ console.log("Selected Employee:", employee);
 
               <h2>{employee.name}</h2>
 
-              <p>
-                {employee.tasks?.[0]?.department || "Department"}
-              </p>
+              <p>{employee.designation}</p>
+
+              <span>{employee.department}</span>
 
             </div>
 
@@ -268,7 +264,7 @@ console.log("Selected Employee:", employee);
 
               <span>Total Tasks</span>
 
-              <h3>{employee.tasks?.length || 0}</h3>
+              <h3>{totalTasks}</h3>
 
             </div>
 
@@ -276,13 +272,7 @@ console.log("Selected Employee:", employee);
 
               <span>Completed</span>
 
-              <h3>
-                {
-                  employee.tasks?.filter(
-                    (task) => task.remarks === "Closed"
-                  ).length
-                }
-              </h3>
+              <h3>{completedTasks}</h3>
 
             </div>
 
@@ -290,13 +280,7 @@ console.log("Selected Employee:", employee);
 
               <span>Pending</span>
 
-              <h3>
-                {
-                  employee.tasks?.filter(
-                    (task) => task.remarks !== "Closed"
-                  ).length
-                }
-              </h3>
+              <h3>{pendingTasks}</h3>
 
             </div>
 
@@ -304,7 +288,7 @@ console.log("Selected Employee:", employee);
 
         </div>
 
-        {/* Right Performance Banner */}
+        {/* Right Performance Card */}
 
         <div className="performance-banner">
 
@@ -320,9 +304,7 @@ console.log("Selected Employee:", employee);
 
               <h4>Performance Score</h4>
 
-              <p>
-                Based on completed tasks
-              </p>
+              <p>Based on completed tasks</p>
 
             </div>
 
@@ -346,15 +328,13 @@ console.log("Selected Employee:", employee);
 
         <div className="stats-card blue">
 
-          <div className="stats-icon">
-            📋
-          </div>
+          <div className="stats-icon">📋</div>
 
           <div>
 
             <h4>Total Tasks</h4>
 
-            <h2>{employee.tasks?.length || 0}</h2>
+            <h2>{totalTasks}</h2>
 
           </div>
 
@@ -362,23 +342,13 @@ console.log("Selected Employee:", employee);
 
         <div className="stats-card green">
 
-          <div className="stats-icon">
-            ✅
-          </div>
+          <div className="stats-icon">✅</div>
 
           <div>
 
             <h4>Completed</h4>
 
-            <h2>
-
-              {
-                employee.tasks?.filter(
-                  (task) => task.remarks === "Closed"
-                ).length
-              }
-
-            </h2>
+            <h2>{completedTasks}</h2>
 
           </div>
 
@@ -386,23 +356,13 @@ console.log("Selected Employee:", employee);
 
         <div className="stats-card orange">
 
-          <div className="stats-icon">
-            ⏳
-          </div>
+          <div className="stats-icon">⏳</div>
 
           <div>
 
             <h4>Pending</h4>
 
-            <h2>
-
-              {
-                employee.tasks?.filter(
-                  (task) => task.remarks !== "Closed"
-                ).length
-              }
-
-            </h2>
+            <h2>{pendingTasks}</h2>
 
           </div>
 
@@ -410,22 +370,16 @@ console.log("Selected Employee:", employee);
 
         <div className="stats-card red">
 
-          <div className="stats-icon">
-            🔥
-          </div>
+          <div className="stats-icon">🔥</div>
 
           <div>
 
             <h4>High Priority</h4>
 
             <h2>
-
-              {
-                employee.tasks?.filter(
-                  (task) => task.priority === "High"
-                ).length
-              }
-
+              {employee.tasks?.filter(
+                (task) => task.priority === "High"
+              ).length || 0}
             </h2>
 
           </div>
@@ -434,22 +388,16 @@ console.log("Selected Employee:", employee);
 
         <div className="stats-card purple">
 
-          <div className="stats-icon">
-            ⭐
-          </div>
+          <div className="stats-icon">⭐</div>
 
           <div>
 
             <h4>Medium Priority</h4>
 
             <h2>
-
-              {
-                employee.tasks?.filter(
-                  (task) => task.priority === "Medium"
-                ).length
-              }
-
+              {employee.tasks?.filter(
+                (task) => task.priority === "Medium"
+              ).length || 0}
             </h2>
 
           </div>
@@ -458,22 +406,16 @@ console.log("Selected Employee:", employee);
 
         <div className="stats-card cyan">
 
-          <div className="stats-icon">
-            💡
-          </div>
+          <div className="stats-icon">💡</div>
 
           <div>
 
             <h4>Low Priority</h4>
 
             <h2>
-
-              {
-                employee.tasks?.filter(
-                  (task) => task.priority === "Low"
-                ).length
-              }
-
+              {employee.tasks?.filter(
+                (task) => task.priority === "Low"
+              ).length || 0}
             </h2>
 
           </div>
@@ -481,11 +423,6 @@ console.log("Selected Employee:", employee);
         </div>
 
       </div>
-
-      {/* ========================= */}
-      {/* Part 3 Starts Here */}
-      {/* Charts Section */}
-      {/* ========================= */}
             {/* ========================= */}
       {/* Charts Section */}
       {/* ========================= */}
@@ -498,80 +435,43 @@ console.log("Selected Employee:", employee);
 
         <div className="progress-card">
 
-          {(() => {
+          <div className="progress-header">
 
-            const totalTasks =
-              employee.tasks?.length || 0;
+            <h3>Overall Progress</h3>
 
-            const completedTasks =
-              employee.tasks?.filter(
-                (task) => task.remarks === "Closed"
-              ).length || 0;
+            <span>{completionRate}%</span>
 
-            const percentage =
-              totalTasks === 0
-                ? 0
-                : Math.round(
-                    (completedTasks /
-                      totalTasks) *
-                      100
-                  );
+          </div>
 
-            return (
-              <>
+          <div className="progress-bar">
 
-                <div className="progress-header">
+            <div
+              className="progress-fill"
+              style={{
+                width: `${completionRate}%`,
+              }}
+            ></div>
 
-                  <h3>
-                    Overall Progress
-                  </h3>
+          </div>
 
-                  <span>
-                    {percentage}%
-                  </span>
+          <div className="progress-footer">
 
-                </div>
+            <span>
+              Completed
+              <strong> {completedTasks}</strong>
+            </span>
 
-                <div className="progress-bar">
+            <span>
+              Total
+              <strong> {totalTasks}</strong>
+            </span>
 
-                  <div
-                    className="progress-fill"
-                    style={{
-                      width: `${percentage}%`,
-                    }}
-                  ></div>
-
-                </div>
-
-                <div className="progress-footer">
-
-                  <span>
-                    Completed
-                    <strong>
-                      {" "}
-                      {completedTasks}
-                    </strong>
-                  </span>
-
-                  <span>
-                    Total
-                    <strong>
-                      {" "}
-                      {totalTasks}
-                    </strong>
-                  </span>
-
-                </div>
-
-              </>
-            );
-
-          })()}
+          </div>
 
         </div>
 
         {/* ========================= */}
-        {/* Task Status Pie Chart */}
+        {/* Pie Chart */}
         {/* ========================= */}
 
         <div className="chart-card">
@@ -598,19 +498,16 @@ console.log("Selected Employee:", employee);
                 label
               >
 
-                {pieData.map(
-                  (entry, index) => (
-                    <Cell
-                      key={index}
-                      fill={
-                        COLORS[
-                          index %
-                            COLORS.length
-                        ]
-                      }
-                    />
-                  )
-                )}
+                {pieData.map((entry, index) => (
+
+                  <Cell
+                    key={index}
+                    fill={
+                      COLORS[index % COLORS.length]
+                    }
+                  />
+
+                ))}
 
               </Pie>
 
@@ -650,9 +547,7 @@ console.log("Selected Employee:", employee);
 
           <div className="chart-header">
 
-            <h3>
-              Priority Distribution
-            </h3>
+            <h3>Priority Distribution</h3>
 
           </div>
 
@@ -662,46 +557,12 @@ console.log("Selected Employee:", employee);
           >
 
             <BarChart
-              data={[
-                {
-                  priority: "High",
-                  tasks:
-                    employee.tasks?.filter(
-                      (task) =>
-                        task.priority ===
-                        "High"
-                    ).length || 0,
-                },
-
-                {
-                  priority: "Medium",
-                  tasks:
-                    employee.tasks?.filter(
-                      (task) =>
-                        task.priority ===
-                        "Medium"
-                    ).length || 0,
-                },
-
-                {
-                  priority: "Low",
-                  tasks:
-                    employee.tasks?.filter(
-                      (task) =>
-                        task.priority ===
-                        "Low"
-                    ).length || 0,
-                },
-              ]}
+              data={priorityData}
             >
 
-              <CartesianGrid
-                strokeDasharray="3 3"
-              />
+              <CartesianGrid strokeDasharray="3 3" />
 
-              <XAxis
-                dataKey="priority"
-              />
+              <XAxis dataKey="priority" />
 
               <YAxis />
 
@@ -710,12 +571,7 @@ console.log("Selected Employee:", employee);
               <Bar
                 dataKey="tasks"
                 fill="#4f46e5"
-                radius={[
-                  10,
-                  10,
-                  0,
-                  0,
-                ]}
+                radius={[10, 10, 0, 0]}
               />
 
             </BarChart>
@@ -727,71 +583,36 @@ console.log("Selected Employee:", employee);
       </div>
 
       {/* ========================= */}
-      {/* Performance Overview */}
+      {/* Performance Summary */}
       {/* ========================= */}
 
       <div className="performance-summary">
 
         <div className="summary-box">
 
-          <h4>
-            Completed Tasks
-          </h4>
+          <h4>Completed Tasks</h4>
 
-          <h2>
-
-            {
-              employee.tasks?.filter(
-                (task) =>
-                  task.remarks ===
-                  "Closed"
-              ).length
-            }
-
-          </h2>
+          <h2>{completedTasks}</h2>
 
         </div>
 
         <div className="summary-box">
 
-          <h4>
-            Pending Tasks
-          </h4>
+          <h4>Pending Tasks</h4>
 
-          <h2>
-
-            {
-              employee.tasks?.filter(
-                (task) =>
-                  task.remarks !==
-                  "Closed"
-              ).length
-            }
-
-          </h2>
+          <h2>{pendingTasks}</h2>
 
         </div>
 
         <div className="summary-box">
 
-          <h4>
-            Completion Rate
-          </h4>
+          <h4>Completion Rate</h4>
 
-          <h2>
-
-            {completionRate}%
-
-          </h2>
+          <h2>{completionRate}%</h2>
 
         </div>
 
       </div>
-
-      {/* ========================= */}
-      {/* Part 4 Starts Here */}
-      {/* Recent Tasks + Timeline + Export */}
-      {/* ========================= */}
             {/* ========================= */}
       {/* Recent Tasks */}
       {/* ========================= */}
@@ -806,7 +627,7 @@ console.log("Selected Employee:", employee);
 
             <FaDownload />
 
-            Export
+            <span>Export</span>
 
           </button>
 
@@ -836,7 +657,7 @@ console.log("Selected Employee:", employee);
 
               employee.tasks.map((task, index) => (
 
-                <tr key={task.id || index}>
+                <tr key={task._id || task.id || index}>
 
                   <td>{task.date}</td>
 
@@ -845,9 +666,11 @@ console.log("Selected Employee:", employee);
                   <td>
 
                     <span
-                      className={`priority-badge ${task.priority.toLowerCase()}`}
+                      className={`priority-badge ${
+                        (task.priority || "Low").toLowerCase()
+                      }`}
                     >
-                      {task.priority}
+                      {task.priority || "Low"}
                     </span>
 
                   </td>
@@ -894,9 +717,8 @@ console.log("Selected Employee:", employee);
         </table>
 
       </div>
-
-      {/* ========================= */}
-      {/* Timeline */}
+            {/* ========================= */}
+      {/* Recent Activity Timeline */}
       {/* ========================= */}
 
       <div className="timeline-card">
@@ -913,7 +735,7 @@ console.log("Selected Employee:", employee);
 
               <div
                 className="timeline-item"
-                key={task.id || index}
+                key={task._id || task.id || index}
               >
 
                 <div className="timeline-dot"></div>
@@ -923,12 +745,8 @@ console.log("Selected Employee:", employee);
                   <h4>{task.task}</h4>
 
                   <p>
-
                     {task.date}
-
-                    {task.timing &&
-                      ` • ${task.timing}`}
-
+                    {task.timing && ` • ${task.timing}`}
                   </p>
 
                   <span
@@ -954,6 +772,60 @@ console.log("Selected Employee:", employee);
       </div>
 
       {/* ========================= */}
+      {/* Employee Information */}
+      {/* ========================= */}
+
+      <div className="employee-details-card">
+
+        <h2>Employee Information</h2>
+
+        <div className="employee-details-grid">
+
+          <div className="detail-box">
+            <span>Full Name</span>
+            <h4>{employee.name}</h4>
+          </div>
+
+          <div className="detail-box">
+            <span>Email</span>
+            <h4>{employee.email || "N/A"}</h4>
+          </div>
+
+          <div className="detail-box">
+            <span>Phone</span>
+            <h4>{employee.phone || "N/A"}</h4>
+          </div>
+
+          <div className="detail-box">
+            <span>Designation</span>
+            <h4>{employee.designation || "N/A"}</h4>
+          </div>
+
+          <div className="detail-box">
+            <span>Department</span>
+            <h4>{employee.department || "N/A"}</h4>
+          </div>
+
+          <div className="detail-box">
+            <span>Status</span>
+
+            <h4
+              className={
+                employee.status === "Active"
+                  ? "status-active"
+                  : "status-inactive"
+              }
+            >
+              {employee.status || "Active"}
+            </h4>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* ========================= */}
       {/* Performance Summary */}
       {/* ========================= */}
 
@@ -967,7 +839,7 @@ console.log("Selected Employee:", employee);
 
             <span>Total Tasks</span>
 
-            <h2>{employee.tasks?.length || 0}</h2>
+            <h2>{totalTasks}</h2>
 
           </div>
 
@@ -975,15 +847,7 @@ console.log("Selected Employee:", employee);
 
             <span>Completed</span>
 
-            <h2>
-
-              {
-                employee.tasks?.filter(
-                  (task) => task.remarks === "Closed"
-                ).length
-              }
-
-            </h2>
+            <h2>{completedTasks}</h2>
 
           </div>
 
@@ -991,15 +855,7 @@ console.log("Selected Employee:", employee);
 
             <span>Pending</span>
 
-            <h2>
-
-              {
-                employee.tasks?.filter(
-                  (task) => task.remarks !== "Closed"
-                ).length
-              }
-
-            </h2>
+            <h2>{pendingTasks}</h2>
 
           </div>
 
@@ -1007,19 +863,14 @@ console.log("Selected Employee:", employee);
 
             <span>Completion Rate</span>
 
-            <h2>
-
-              {completionRate}%
-
-            </h2>
+            <h2>{completionRate}%</h2>
 
           </div>
 
         </div>
 
       </div>
-
-    </div>
+          </div>
 
   );
 

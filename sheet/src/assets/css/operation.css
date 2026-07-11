@@ -1,28 +1,591 @@
-.operation-container { padding: 24px; background: #f8fafc; min-height: 100vh; }
-.section-title { color: #0d1137; margin-bottom: 20px; font-weight: 700; font-size: 22px; }
+/* ==========================================
+   OPERATION PAGE - PREMIUM DARK UI
+   PART 3A
+========================================== */
 
-.filter-section { display: flex; gap: 15px; margin-bottom: 20px; }
-.search-input, .filter-select { padding: 10px 16px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; }
-
-/* Professional Table */
-.operation-table { 
-  width: 100%; border-collapse: collapse; background: white; 
-  border: 1px solid #d6d6d6; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Inter","Segoe UI",sans-serif;
 }
-.operation-table th { background-color: #0d1137; color: white; padding: 16px; text-align: center; border: 1px solid #d6d6d6; }
-.operation-table td { padding: 14px; border: 1px solid #d6d6d6; text-align: center; color: #334155; }
 
-.operation-table tbody tr:nth-child(even) { background: #f5f7ff; }
-.operation-table tbody tr:hover { background: #eef3ff; }
+.operation-container{
+    min-height:100vh;
+    padding:25px;
+    background:#111827;
+    color:#ffffff;
+    transition:.3s;
+}
 
-/* Actions & Buttons */
-.action-cell { display: flex; gap: 8px; justify-content: center; }
-.btn-edit { background: #4f46e5; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
-.btn-save { background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
-.btn-delete { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
-.edit-input { padding: 5px; border: 1px solid #4f46e5; border-radius: 4px; width: 80%; }
+/* ==========================
+   HEADER
+========================== */
 
-/* Pagination */
-.pagination-controls { display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 20px; }
-.pagination-controls button { padding: 8px 16px; background: #0d1137; color: white; border: none; border-radius: 4px; cursor: pointer; }
-.pagination-controls button:disabled { background: #cbd5e1; }
+.operation-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.operation-header h1{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:32px;
+    font-weight:700;
+}
+
+.operation-header p{
+    margin-top:8px;
+    color:#9ca3af;
+    font-size:15px;
+}
+
+/* ==========================
+   SEARCH + FILTER
+========================== */
+
+.filter-section{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+    margin-bottom:30px;
+}
+
+.search-box,
+.filter-box{
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    background:#1f2937;
+
+    padding:14px 18px;
+
+    border-radius:14px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+
+}
+
+.search-box{
+    flex:1;
+    min-width:320px;
+}
+
+.search-input{
+
+    width:100%;
+
+    border:none;
+    outline:none;
+
+    background:transparent;
+
+    color:white;
+
+    font-size:15px;
+}
+
+.search-input::placeholder{
+    color:#9ca3af;
+}
+
+.filter-select{
+
+    border:none;
+    outline:none;
+
+    background:transparent;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-size:15px;
+}
+
+.filter-select option{
+    background:#1f2937;
+    color:white;
+}
+
+/* ==========================
+   TABLE
+========================== */
+
+.table-wrapper{
+
+    overflow-x:auto;
+
+    border-radius:18px;
+
+    background:#1f2937;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+
+}
+
+.operation-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    min-width:1050px;
+}
+
+.operation-table thead{
+
+    background:linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+
+}
+
+.operation-table th{
+
+    padding:18px;
+
+    color:white;
+
+    text-align:center;
+
+    font-size:15px;
+
+    cursor:pointer;
+
+    user-select:none;
+
+    transition:.3s;
+}
+
+.operation-table th:hover{
+
+    background:rgba(255,255,255,.08);
+
+}
+
+.operation-table td{
+
+    padding:16px;
+
+    text-align:center;
+
+    color:#e5e7eb;
+
+    border-bottom:1px solid #374151;
+
+}
+
+.operation-table tbody tr{
+
+    transition:.3s;
+
+}
+
+.operation-table tbody tr:nth-child(even){
+
+    background:#182230;
+
+}
+
+.operation-table tbody tr:hover{
+
+    background:#2a3648;
+
+}
+/* ==========================
+   STATUS BADGES
+========================== */
+
+.status{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:120px;
+    padding:8px 16px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.3px;
+}
+
+.completed{
+    background:#064e3b;
+    color:#6ee7b7;
+}
+
+.process{
+    background:#78350f;
+    color:#fcd34d;
+}
+
+.pending{
+    background:#7f1d1d;
+    color:#fca5a5;
+}
+
+/* ==========================
+   EDIT INPUT
+========================== */
+
+.edit-input{
+
+    width:140px;
+
+    padding:8px 10px;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:8px;
+
+    background:#374151;
+
+    color:white;
+
+}
+
+/* ==========================
+   ACTION BUTTONS
+========================== */
+
+.action-cell{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:10px;
+
+    flex-wrap:wrap;
+
+}
+
+.btn-edit,
+.btn-save,
+.btn-delete{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:6px;
+
+    padding:9px 14px;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+.btn-edit{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+.btn-edit:hover{
+
+    background:#1d4ed8;
+
+    transform:translateY(-2px);
+
+}
+
+.btn-save{
+
+    background:#10b981;
+
+    color:white;
+
+}
+
+.btn-save:hover{
+
+    background:#059669;
+
+    transform:translateY(-2px);
+
+}
+
+.btn-delete{
+
+    background:#ef4444;
+
+    color:white;
+
+}
+
+.btn-delete:hover{
+
+    background:#dc2626;
+
+    transform:translateY(-2px);
+
+}
+
+/* ==========================
+   EMPTY ROW
+========================== */
+
+.empty-row{
+
+    padding:35px;
+
+    text-align:center;
+
+    color:#9ca3af;
+
+    font-size:16px;
+
+}
+
+/* ==========================
+   PAGINATION
+========================== */
+
+.pagination-controls{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:18px;
+
+    margin-top:28px;
+
+    flex-wrap:wrap;
+
+}
+
+.pagination-controls button{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:12px 22px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#2563eb;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.pagination-controls button:hover:not(:disabled){
+
+    background:#1d4ed8;
+
+}
+
+.pagination-controls button:disabled{
+
+    background:#4b5563;
+
+    cursor:not-allowed;
+
+}
+
+.page-number{
+
+    background:#1f2937;
+
+    border:1px solid #374151;
+
+    padding:12px 18px;
+
+    border-radius:12px;
+
+    color:white;
+
+}
+
+/* ==========================
+   SCROLLBAR
+========================== */
+
+.table-wrapper::-webkit-scrollbar{
+
+    height:8px;
+
+}
+
+.table-wrapper::-webkit-scrollbar-thumb{
+
+    background:#2563eb;
+
+    border-radius:20px;
+
+}
+
+.table-wrapper::-webkit-scrollbar-track{
+
+    background:#374151;
+
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media (max-width:992px){
+
+.operation-header{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+gap:15px;
+
+}
+
+.search-box{
+
+min-width:100%;
+
+}
+
+.filter-box{
+
+width:100%;
+
+justify-content:flex-start;
+
+}
+
+}
+
+@media (max-width:768px){
+
+.operation-container{
+
+padding:18px;
+
+}
+
+.operation-header h1{
+
+font-size:26px;
+
+}
+
+.filter-section{
+
+flex-direction:column;
+
+align-items:stretch;
+
+}
+
+.search-box,
+.filter-box{
+
+width:100%;
+
+}
+
+.operation-table{
+
+min-width:900px;
+
+}
+
+.action-cell{
+
+flex-direction:column;
+
+}
+
+.btn-edit,
+.btn-save,
+.btn-delete{
+
+width:100%;
+
+}
+
+.pagination-controls{
+
+gap:12px;
+
+}
+
+}
+
+@media (max-width:480px){
+
+.operation-container{
+
+padding:15px;
+
+}
+
+.operation-header h1{
+
+font-size:22px;
+
+}
+
+.operation-header p{
+
+font-size:14px;
+
+}
+
+.page-number{
+
+width:100%;
+
+text-align:center;
+
+}
+
+.pagination-controls button{
+
+width:100%;
+
+justify-content:center;
+
+}
+
+}

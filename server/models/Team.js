@@ -1,41 +1,58 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
-const TeamSchema = new mongoose.Schema({
+// ===========================================
+// Team Schema
+// ===========================================
+
+const teamSchema = new mongoose.Schema(
+  {
     name: {
-        type: String,
-        required: [true, 'Name is required'],
-        trim: true
+      type: String,
+      required: true,
+      trim: true,
     },
-    email: {
-        type: String,
-        required: [true, 'Email is required'],
-        unique: true,
-        trim: true,
-        lowercase: true,
-        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
-    },
-    phone: {
-        type: String,
-        required: [true, 'Phone number is required'],
-        trim: true
-    },
-    designation: {
-        type: String,
-        required: [true, 'Designation is required'],
-        trim: true
-    },
-    department: {
-        type: String,
-        required: [true, 'Department is required'],
-        trim: true
-    },
-    status: {
-        type: String,
-        enum: ['Active', 'Inactive'],
-        default: 'Active'
-    }
-}, {
-    timestamps: true
-});
 
-module.exports = mongoose.model('Team', TeamSchema);
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+
+    phone: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    designation: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    department: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    status: {
+      type: String,
+      enum: ["Active", "Inactive"],
+      default: "Active",
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+// ===========================================
+// Export Model
+// ===========================================
+
+const Team = mongoose.model("Team", teamSchema);
+
+export default Team;

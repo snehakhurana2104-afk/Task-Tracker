@@ -1,18 +1,45 @@
-const express = require('express');
+import express from "express";
+
+import {
+  getAllMembers,
+  getMemberById,
+  createMember,
+  updateMember,
+  deleteMember,
+} from "../controllers/teamController.js";
+
+// ===========================================
+// Initialize Router
+// ===========================================
+
 const router = express.Router();
-const {
-    getTeamMembers,
-    addTeamMember,
-    updateTeamMember,
-    deleteTeamMember
-} = require('../controllers/teamController');
 
-router.route('/')
-    .get(getTeamMembers)
-    .post(addTeamMember);
+// ===========================================
+// Team Routes
+// ===========================================
 
-router.route('/:id')
-    .put(updateTeamMember)
-    .delete(deleteTeamMember);
+// Get All Team Members
+// GET : /api/team
+router.get("/", getAllMembers);
 
-module.exports = router;
+// Get Single Team Member
+// GET : /api/team/:id
+router.get("/:id", getMemberById);
+
+// Add New Team Member
+// POST : /api/team
+router.post("/", createMember);
+
+// Update Team Member
+// PUT : /api/team/:id
+router.put("/:id", updateMember);
+
+// Delete Team Member
+// DELETE : /api/team/:id
+router.delete("/:id", deleteMember);
+
+// ===========================================
+// Export Router
+// ===========================================
+
+export default router;

@@ -1,54 +1,92 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../assets/css/dashboard.css";
 
 import {
-  Bell,
   Search,
   UserCircle,
   ClipboardList,
   Clock3,
   CheckCircle,
   Users,
+  PlusCircle,
+  RefreshCw,
+  Download,
 } from "lucide-react";
 
-const Dashboard = () => {
-  const [tasks, setTasks] = useState([]);
+// ===========================================
+// DASHBOARD COMPONENT
+// ===========================================
+
+const Dashboard = ({
+  tasks = [],
+  setTasks,
+  recentTasks,
+  setRecentTasks,
+  fetchTasks: parentFetchTasks,
+  darkMode,
+}) => {
+  // ===========================================
+  // STATES
+  // ===========================================
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const [loading, setLoading] = useState(false);
 
   const [taskData, setTaskData] = useState({
     date: "",
-    name: "Amit",
-    status: "Pending",
-    details: "",
-    startTime: "",
-    endDate: "",
-    endTime: "",
+    name: "",
+    task: "",
+    timing: "",
+    remarks: "Pending",
   });
 
-  // ===========================
-  // Fetch Tasks
-  // ===========================
+  // ===========================================
+  // FETCH TASKS
+  // ===========================================
 
   const fetchTasks = async () => {
     try {
+      setLoading(true);
+
       const res = await axios.get(
         "http://localhost:5000/api/tasks"
       );
 
-      setTasks(res.data);
+      // MongoDB array safely nikalo
+      const dbTasks = Array.isArray(res.data.data)
+        ? res.data.data
+        : [];
 
-    } catch (err) {
-      console.log(err);
+      setTasks(dbTasks);
+
+      // Latest 5 Tasks
+      if (setRecentTasks) {
+        setRecentTasks([...dbTasks].slice(-5).reverse());
+      }
+    } catch (error) {
+      console.error("Fetch Tasks Error:", error);
+      setTasks([]);
+    } finally {
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+  // ===========================================
+  // LOAD DATA
+  // ===========================================
 
-  // ===========================
-  // Handle Input
-  // ===========================
+  useEffect(() => {
+    if (parentFetchTasks) {
+      parentFetchTasks();
+    } else {
+      fetchTasks();
+    }
+  }, []);
+    // ===========================================
+  // HANDLE INPUT
+  // ===========================================
 
   const handleChange = (e) => {
     setTaskData({
@@ -57,293 +95,340 @@ const Dashboard = () => {
     });
   };
 
-  // ===========================
-  // Add Task
-  // ===========================
+  // ===========================================
+  // ADD TASK
+  // ===========================================
 
-  const handleAppend = async () => {
-
-    if (
-      !taskData.date ||
-      !taskData.details ||
-      !taskData.startTime
-    ) {
-      alert("Please fill required fields");
-      return;
-    }
+  const addTask = async (e) => {
+    e.preventDefault();
 
     try {
+      setLoading(true);
 
       await axios.post(
         "http://localhost:5000/api/tasks",
-        {
-          date: taskData.date,
-          name: taskData.name,
-          task: taskData.details,
-          timing: taskData.startTime,
-          remarks: taskData.status,
-          completedDate: taskData.endDate,
-          completedTime: taskData.endTime,
-          status: taskData.status,
-        }
+        taskData
       );
 
-      fetchTasks();
-
+      // Reset Form
       setTaskData({
         date: "",
-        name: "Amit",
-        status: "Pending",
-        details: "",
-        startTime: "",
-        endDate: "",
-        endTime: "",
+        name: "",
+        task: "",
+        timing: "",
+        remarks: "Pending",
       });
 
-      alert("Task Added Successfully");
+      // Refresh Tasks
+      if (parentFetchTasks) {
+        await parentFetchTasks();
+      } else {
+        await fetchTasks();
+      }
 
-    } catch (err) {
+      alert("✅ Task Added Successfully");
 
-      console.log(err);
-      alert("Failed");
-
+    } catch (error) {
+      console.error("Add Task Error:", error);
+      alert("❌ Failed to Add Task");
+    } finally {
+      setLoading(false);
     }
   };
+    // ===========================================
+  // SEARCH FILTER (SAFE)
+  // ===========================================
+
+  const safeTasks = Array.isArray(tasks) ? tasks : [];
+
+  const filteredTasks = safeTasks.filter((item) => {
+    const employee = (item.name || "").toLowerCase();
+    const task = (item.task || "").toLowerCase();
+
     return (
-    <div className="dashboard-wrapper">
+      employee.includes(searchTerm.toLowerCase()) ||
+      task.includes(searchTerm.toLowerCase())
+    );
+  });
 
-      <main className="main-panel">
+  // ===========================================
+  // DASHBOARD COUNTS
+  // ===========================================
 
-        {/* ---------- TOP NAVBAR ---------- */}
+  const totalTasks = safeTasks.length;
 
-        <header className="top-navbar">
+  const completedTasks = safeTasks.filter(
+    (item) =>
+      item.remarks === "Completed" ||
+      item.remarks === "Closed"
+  ).length;
 
-          <div className="navbar-left">
-            <h2>Dashboard</h2>
-            <p>Task Management System</p>
+  const pendingTasks = safeTasks.filter(
+    (item) =>
+      item.remarks !== "Completed" &&
+      item.remarks !== "Closed"
+  ).length;
+
+  const inProcessTasks = safeTasks.filter(
+    (item) => item.remarks === "In-Process"
+  ).length;
+
+  // ===========================================
+  // COMPLETION %
+  // ===========================================
+
+  const completionRate =
+    totalTasks > 0
+      ? Math.round((completedTasks / totalTasks) * 100)
+      : 0;
+
+  // ===========================================
+  // RECENT TASKS
+  // ===========================================
+
+  const latestTasks =
+    recentTasks && recentTasks.length > 0
+      ? recentTasks
+      : [...safeTasks].slice(-5).reverse();
+        return (
+    <div className={darkMode ? "dashboard dark" : "dashboard"}>
+
+      {/* ===========================
+          NAVBAR
+      ============================ */}
+
+      <div className="dashboard-navbar">
+
+        <div className="search-box">
+
+          <Search size={20} />
+
+          <input
+            type="text"
+            placeholder="Search employee or task..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+
+        </div>
+
+        <div className="profile">
+
+          <UserCircle size={36} />
+
+          <div className="profile-info">
+            <h4>Admin</h4>
+            <span>Strategy & Operations</span>
           </div>
 
-          <div className="navbar-search">
-            <Search size={18} />
-            <input
-              type="text"
-              placeholder="Search Tasks..."
-            />
-          </div>
+        </div>
 
-          <div className="navbar-right">
+      </div>
 
-            <Bell className="icon-btn" />
+      {/* ===========================
+          HERO SECTION
+      ============================ */}
 
-            <UserCircle className="icon-btn" />
+      <div className="hero">
 
-            <div className="profile-box">
-              <h4>Sneha</h4>
-              <span>Administrator</span>
-            </div>
+        <div>
 
-          </div>
+          <h1>Welcome Back 👋</h1>
 
-        </header>
+          <p>
+            Manage your team's productivity and monitor daily operations
+            from one place.
+          </p>
 
-        {/* ---------- HERO ---------- */}
+        </div>
 
-        <section className="hero-section">
+        <button
+          className="refresh-btn"
+          onClick={parentFetchTasks ? parentFetchTasks : fetchTasks}
+        >
+          <RefreshCw size={18} />
+          Refresh
+        </button>
+
+      </div>
+
+      {/* ===========================
+          STAT CARDS
+      ============================ */}
+
+      <div className="stats-container">
+
+        <div className="stat-card">
+
+          <ClipboardList size={34} />
 
           <div>
-            <h1>Welcome Back 👋</h1>
 
-            <p>
-              Manage your daily tasks efficiently.
-            </p>
-          </div>
+            <h2>{totalTasks}</h2>
 
-        </section>
-
-        {/* ---------- STATS ---------- */}
-
-        <section className="stats-section">
-
-          <div className="stat-card">
-            <ClipboardList size={34} />
-            <h3>Total Tasks</h3>
-            <h2>{tasks.length}</h2>
-          </div>
-
-          <div className="stat-card pending">
-            <Clock3 size={34} />
-            <h3>Pending</h3>
-
-            <h2>
-              {
-                tasks.filter(
-                  (t) => t.remarks === "Pending"
-                ).length
-              }
-            </h2>
+            <p>Total Tasks</p>
 
           </div>
 
-          <div className="stat-card completed">
-            <CheckCircle size={34} />
-            <h3>Completed</h3>
+        </div>
 
-            <h2>
-              {
-                tasks.filter(
-                  (t) => t.remarks === "Closed"
-                ).length
-              }
-            </h2>
+        <div className="stat-card">
+
+          <Clock3 size={34} />
+
+          <div>
+
+            <h2>{pendingTasks}</h2>
+
+            <p>Pending Tasks</p>
 
           </div>
 
-          <div className="stat-card team">
-            <Users size={34} />
-            <h3>Team Members</h3>
-            <h2>2</h2>
+        </div>
+
+        <div className="stat-card">
+
+          <CheckCircle size={34} />
+
+          <div>
+
+            <h2>{completedTasks}</h2>
+
+            <p>Completed Tasks</p>
+
           </div>
 
-        </section>
+        </div>
 
-        {/* ---------- FORM ---------- */}
+        <div className="stat-card">
 
-        <section className="task-form-box">
+          <Users size={34} />
 
+          <div>
+
+            <h2>{completionRate}%</h2>
+
+            <p>Completion Rate</p>
+
+          </div>
+
+        </div>
+
+      </div>
+            {/* ===========================
+          ADD TASK SECTION
+      ============================ */}
+
+      <div className="task-form-section">
+
+        <div className="section-title">
           <h2>Add New Task</h2>
+          <p>Create and assign a new task to your team.</p>
+        </div>
 
-          <div className="form-grid">
+        <form
+          className="task-form"
+          onSubmit={addTask}
+        >
 
-            <div className="input-group">
-              <label>Date</label>
+          <input
+            type="date"
+            name="date"
+            value={taskData.date}
+            onChange={handleChange}
+            required
+          />
 
-              <input
-                type="date"
-                name="date"
-                value={taskData.date}
-                onChange={handleChange}
-              />
-            </div>
+          <input
+            type="text"
+            name="name"
+            placeholder="Employee Name"
+            value={taskData.name}
+            onChange={handleChange}
+            required
+          />
 
-            <div className="input-group">
-              <label>Name</label>
+          <input
+            type="text"
+            name="task"
+            placeholder="Task Description"
+            value={taskData.task}
+            onChange={handleChange}
+            required
+          />
 
-              <select
-                name="name"
-                value={taskData.name}
-                onChange={handleChange}
-              >
-                <option>Amit</option>
-                <option>Shivam</option>
-              </select>
+          <input
+            type="text"
+            name="timing"
+            placeholder="Timing (Ex: 10:30 AM)"
+            value={taskData.timing}
+            onChange={handleChange}
+          />
 
-            </div>
-
-            <div className="input-group">
-
-              <label>Status</label>
-
-              <select
-                name="status"
-                value={taskData.status}
-                onChange={handleChange}
-              >
-                <option>Pending</option>
-                <option>Closed</option>
-                <option>Calls</option>
-              </select>
-
-            </div>
-
-            <div className="input-group">
-
-              <label>Strategic Details</label>
-
-              <input
-                type="text"
-                name="details"
-                placeholder="Enter task..."
-                value={taskData.details}
-                onChange={handleChange}
-              />
-
-            </div>
-
-            <div className="input-group">
-
-              <label>Start Time</label>
-
-              <input
-                type="time"
-                name="startTime"
-                value={taskData.startTime}
-                onChange={handleChange}
-              />
-
-            </div>
-
-            {(taskData.status === "Closed" ||
-              taskData.status === "Calls") && (
-              <>
-
-                <div className="input-group">
-
-                  <label>End Date</label>
-
-                  <input
-                    type="date"
-                    name="endDate"
-                    value={taskData.endDate}
-                    onChange={handleChange}
-                  />
-
-                </div>
-
-                <div className="input-group">
-
-                  <label>End Time</label>
-
-                  <input
-                    type="time"
-                    name="endTime"
-                    value={taskData.endTime}
-                    onChange={handleChange}
-                  />
-
-                </div>
-
-              </>
-            )}
-
-          </div>
+          <select
+            name="remarks"
+            value={taskData.remarks}
+            onChange={handleChange}
+          >
+            <option value="Pending">Pending</option>
+            <option value="In-Process">In-Process</option>
+            <option value="Completed">Completed</option>
+            <option value="Closed">Closed</option>
+          </select>
 
           <button
-            className="submit-btn"
-            onClick={handleAppend}
+            type="submit"
+            disabled={loading}
           >
-            Add Task
+            <PlusCircle size={18} />
+
+            {loading ? "Saving..." : "Add Task"}
+
           </button>
 
-        </section>
-                {/* ---------- TASK HISTORY ---------- */}
+        </form>
 
-        <section className="history-box">
+      </div>
+            {/* ===========================
+          TASK HISTORY
+      ============================ */}
 
-          <h2>Daily Task History</h2>
+      <div className="table-section">
 
-          <table className="styled-table">
+        <div className="table-header">
+
+          <h2>Task History</h2>
+
+          <button className="download-btn">
+            <Download size={18} />
+            Export
+          </button>
+
+        </div>
+
+        {loading ? (
+
+          <div className="loading-box">
+            <h3>Loading Tasks...</h3>
+          </div>
+
+        ) : (
+
+          <table>
 
             <thead>
 
               <tr>
 
                 <th>Date</th>
-                <th>Name</th>
+
+                <th>Employee</th>
+
                 <th>Task</th>
+
+                <th>Timing</th>
+
                 <th>Status</th>
-                <th>Start Time</th>
-                <th>End Date</th>
-                <th>End Time</th>
 
               </tr>
 
@@ -351,39 +436,36 @@ const Dashboard = () => {
 
             <tbody>
 
-              {tasks.length > 0 ? (
+              {filteredTasks.length > 0 ? (
 
-                tasks.map((task, index) => (
+                filteredTasks.map((item, index) => (
 
-                  <tr key={task._id || index}>
+                  <tr key={item._id || index}>
 
-                    <td>{task.date}</td>
+                    <td>{item.date}</td>
 
-                    <td>{task.name}</td>
+                    <td>{item.name}</td>
 
-                    <td>{task.task}</td>
+                    <td>{item.task}</td>
+
+                    <td>{item.timing}</td>
 
                     <td>
 
                       <span
                         className={
-                          task.remarks === "Closed"
-                            ? "status-completed"
-                            : task.remarks === "Calls"
-                            ? "status-calls"
-                            : "status-pending"
+                          item.remarks === "Completed" ||
+                          item.remarks === "Closed"
+                            ? "status completed"
+                            : item.remarks === "In-Process"
+                            ? "status process"
+                            : "status pending"
                         }
                       >
-                        {task.remarks}
+                        {item.remarks}
                       </span>
 
                     </td>
-
-                    <td>{task.timing}</td>
-
-                    <td>{task.completedDate || "-"}</td>
-
-                    <td>{task.completedTime || "-"}</td>
 
                   </tr>
 
@@ -394,13 +476,13 @@ const Dashboard = () => {
                 <tr>
 
                   <td
-                    colSpan="7"
+                    colSpan="5"
                     style={{
                       textAlign: "center",
-                      padding: "20px",
+                      padding: "25px",
                     }}
                   >
-                    No Tasks Available
+                    No Tasks Found
                   </td>
 
                 </tr>
@@ -411,14 +493,66 @@ const Dashboard = () => {
 
           </table>
 
-        </section>
+        )}
 
-      </main>
+      </div>
+
+      {/* ===========================
+          RECENT TASKS
+      ============================ */}
+
+      {latestTasks.length > 0 && (
+
+        <div className="table-section">
+
+          <div className="table-header">
+
+            <h2>Latest 5 Tasks</h2>
+
+          </div>
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>Employee</th>
+
+                <th>Task</th>
+
+                <th>Status</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              {latestTasks.map((item, index) => (
+
+                <tr key={item._id || index}>
+
+                  <td>{item.name}</td>
+
+                  <td>{item.task}</td>
+
+                  <td>{item.remarks}</td>
+
+                </tr>
+
+              ))}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      )}
 
     </div>
-
   );
-
 };
 
 export default Dashboard;

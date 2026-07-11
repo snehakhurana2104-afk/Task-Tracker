@@ -17,7 +17,8 @@ import {
 
 import { useNavigate } from "react-router-dom";
 
-const Team = () => {
+const Team = ({ tasks = [] }) => {
+
   const navigate = useNavigate();
 
   const [teamMembers, setTeamMembers] = useState([]);
@@ -35,14 +36,17 @@ const Team = () => {
     status: "Active",
   };
 
-  const [formData, setFormData] = useState(initialFormState);
+  const [formData, setFormData] =
+    useState(initialFormState);
 
   // ==========================
   // Fetch Team Members
   // ==========================
 
   const fetchTeam = async () => {
+
     try {
+
       setLoading(true);
 
       const response = await axios.get(
@@ -54,14 +58,18 @@ const Team = () => {
       }
 
       setLoading(false);
+
     } catch (err) {
+
       setError(
         err.response?.data?.message ||
           "Failed to fetch team members."
       );
 
       setLoading(false);
+
     }
+
   };
 
   useEffect(() => {
@@ -69,80 +77,125 @@ const Team = () => {
   }, []);
 
   // ==========================
-  // Form Handlers
+  // Form Change
   // ==========================
 
   const handleChange = (e) => {
+
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+
   };
 
+  // ==========================
+  // Open Add Modal
+  // ==========================
+
   const openAddModal = () => {
+
     setEditId(null);
     setFormData(initialFormState);
     setError("");
     setIsModalOpen(true);
+
   };
 
+  // ==========================
+  // Open Edit Modal
+  // ==========================
+
   const openEditModal = (member) => {
+
     setEditId(member._id);
 
     setFormData({
+
       name: member.name,
       email: member.email,
       phone: member.phone,
       designation: member.designation,
       department: member.department,
       status: member.status,
+
     });
 
     setError("");
     setIsModalOpen(true);
+
   };
 
+  // ==========================
+  // Save Member
+  // ==========================
+
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     try {
+
       if (editId) {
+
         await axios.put(
           `http://localhost:5000/api/team/${editId}`,
           formData
         );
+
       } else {
+
         await axios.post(
           "http://localhost:5000/api/team",
           formData
         );
+
       }
 
       setIsModalOpen(false);
       fetchTeam();
+
     } catch (err) {
+
       setError(
         err.response?.data?.message ||
           "Something went wrong."
       );
+
     }
+
   };
 
+  // ==========================
+  // Delete Member
+  // ==========================
+
   const handleDelete = async (id) => {
-    if (!window.confirm("Delete this member?")) return;
+
+    if (
+      !window.confirm(
+        "Delete this member?"
+      )
+    )
+      return;
 
     try {
+
       await axios.delete(
         `http://localhost:5000/api/team/${id}`
       );
 
       fetchTeam();
+
     } catch (err) {
+
       alert(
         err.response?.data?.message ||
           "Delete failed."
       );
+
     }
+
   };
 
   // ==========================
@@ -150,201 +203,285 @@ const Team = () => {
   // ==========================
 
   const openProfile = (member) => {
+
     navigate(
       `/profile/${encodeURIComponent(member.name)}`
     );
+
   };
 
   return (
-    <div className="p-6 bg-slate-50 min-h-screen text-slate-800">
 
-      {/* Header */}
+    <div className="team-container">
 
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+      <div className="team-header">
 
         <div>
 
-          <h1 className="text-2xl font-bold text-slate-900">
+          <h1>
             Team Management
           </h1>
 
-          <p className="text-sm text-slate-500 mt-1">
-            Manage employees and open their profile dashboard.
+          <p>
+            Manage employees and view
+            their profiles.
           </p>
 
         </div>
 
         <button
+          className="add-btn"
           onClick={openAddModal}
-          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg"
         >
+
           <Plus size={18} />
+
           Add Team Member
+
         </button>
 
       </div>
+            {error && !isModalOpen && (
 
-      {error && !isModalOpen && (
-        <div className="mb-5 bg-red-50 border border-red-200 rounded-lg p-3 flex items-center gap-2">
+        <div className="error-box">
+
           <AlertCircle size={18} />
+
           <span>{error}</span>
+
         </div>
+
       )}
 
       {loading ? (
 
-        <div className="flex justify-center items-center h-64">
+        <div className="loading-box">
 
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
+          <div className="loader"></div>
 
         </div>
 
       ) : (
 
-        <div className="bg-white rounded-xl shadow border overflow-hidden">
+        <div className="team-table-wrapper">
 
-          <div className="overflow-x-auto">
+          <table className="team-table">
 
-            <table className="w-full">
+            <thead>
 
-              <thead>
+              <tr>
 
-                <tr className="bg-slate-100">
+                <th>Member</th>
 
-                  <th className="px-6 py-4 text-left">Member</th>
+                <th>Department</th>
 
-                  <th className="px-6 py-4 text-left">
-                    Department
-                  </th>
+                <th>Contact</th>
 
-                  <th className="px-6 py-4 text-left">
-                    Contact
-                  </th>
+                <th>Status</th>
 
-                  <th className="px-6 py-4 text-left">
-                    Status
-                  </th>
+                <th>Tasks</th>
 
-                  <th className="px-6 py-4 text-right">
-                    Actions
-                  </th>
+                <th>Actions</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              {teamMembers.length === 0 ? (
+
+                <tr>
+
+                  <td
+                    colSpan="6"
+                    className="empty-row"
+                  >
+
+                    No Team Members Found
+
+                  </td>
 
                 </tr>
 
-              </thead>
+              ) : (
 
-              <tbody>                {teamMembers.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan="5"
-                      className="text-center py-10 text-slate-500"
-                    >
-                      No Team Members Found
-                    </td>
-                  </tr>
-                ) : (
-                  teamMembers.map((member) => (
-                    <tr
-                      key={member._id}
-                      className="hover:bg-slate-50 transition"
-                    >
+                teamMembers.map((member) => {
+
+                  const memberTasks = tasks.filter(
+                    (task) =>
+                      task.name?.trim().toLowerCase() ===
+                      member.name?.trim().toLowerCase()
+                  );
+
+                  return (
+
+                    <tr key={member._id}>
+
                       {/* Member */}
-                      <td className="px-6 py-4">
-                        <div className="font-semibold text-slate-900">
-                          {member.name}
+
+                      <td>
+
+                        <div className="member-info">
+
+                          <div className="member-avatar">
+
+                            {member.name
+                              ?.charAt(0)
+                              .toUpperCase()}
+
+                          </div>
+
+                          <div>
+
+                            <h4>{member.name}</h4>
+
+                            <span>
+                              {member.designation}
+                            </span>
+
+                          </div>
+
                         </div>
+
                       </td>
 
                       {/* Department */}
-                      <td className="px-6 py-4">
-                        <div className="flex flex-col">
-                          <span className="flex items-center gap-2">
-                            <Briefcase
-                              size={15}
-                              className="text-slate-400"
-                            />
-                            {member.designation}
-                          </span>
 
-                          <span className="flex items-center gap-2 text-xs text-slate-500 mt-1">
-                            <Layers
-                              size={15}
-                              className="text-slate-400"
-                            />
-                            {member.department}
-                          </span>
+                      <td>
+
+                        <div className="department-box">
+
+                          <Briefcase size={15} />
+
+                          {member.department}
+
                         </div>
+
                       </td>
 
                       {/* Contact */}
-                      <td className="px-6 py-4">
-                        <div className="flex flex-col gap-1 text-xs">
-                          <span className="flex items-center gap-2">
-                            <Mail size={14} />
-                            {member.email}
-                          </span>
 
-                          <span className="flex items-center gap-2">
+                      <td>
+
+                        <div className="contact-box">
+
+                          <div>
+
+                            <Mail size={14} />
+
+                            {member.email}
+
+                          </div>
+
+                          <div>
+
                             <Phone size={14} />
+
                             {member.phone}
-                          </span>
+
+                          </div>
+
                         </div>
+
                       </td>
 
                       {/* Status */}
-                      <td className="px-6 py-4">
+
+                      <td>
+
                         <span
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+                          className={`status ${
                             member.status === "Active"
-                              ? "bg-green-100 text-green-700"
-                              : "bg-gray-100 text-gray-600"
+                              ? "active"
+                              : "inactive"
                           }`}
                         >
                           {member.status}
                         </span>
+
+                      </td>
+
+                      {/* Total Tasks */}
+
+                      <td>
+
+                        <span className="task-count">
+
+                          {memberTasks.length}
+
+                        </span>
+
                       </td>
 
                       {/* Actions */}
-                      <td className="px-6 py-4">
-                        <div className="flex justify-end gap-2">
+
+                      <td>
+
+                        <div className="action-buttons">
 
                           {/* View Profile */}
+
                           <button
-                            onClick={() => openProfile(member)}
-                            className="p-2 rounded-lg hover:bg-blue-100 text-blue-600"
+                            className="view-btn"
                             title="View Profile"
+                            onClick={() =>
+                              openProfile(member)
+                            }
                           >
+
                             <User size={17} />
+
                           </button>
 
                           {/* Edit */}
+
                           <button
-                            onClick={() => openEditModal(member)}
-                            className="p-2 rounded-lg hover:bg-indigo-100 text-indigo-600"
+                            className="edit-btn"
                             title="Edit"
+                            onClick={() =>
+                              openEditModal(member)
+                            }
                           >
+
                             <Edit2 size={17} />
+
                           </button>
 
                           {/* Delete */}
+
                           <button
-                            onClick={() => handleDelete(member._id)}
-                            className="p-2 rounded-lg hover:bg-red-100 text-red-600"
+                            className="delete-btn"
                             title="Delete"
+                            onClick={() =>
+                              handleDelete(member._id)
+                            }
                           >
+
                             <Trash2 size={17} />
+
                           </button>
 
                         </div>
+
                       </td>
+
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+
+                  );
+
+                })
+
+              )}
+
+            </tbody>
+
+          </table>
+
         </div>
-      )}      {/* ========================= */}
+
+      )}
+            {/* ========================= */}
       {/* Add / Edit Team Member Modal */}
       {/* ========================= */}
 
@@ -362,7 +499,10 @@ const Team = () => {
               </h2>
 
               <button
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setError("");
+                }}
                 className="text-slate-500 hover:text-red-500"
               >
                 <X size={20} />
@@ -477,9 +617,12 @@ const Team = () => {
                   className="w-full border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"
                 />
 
-              </div>              {/* Status */}
+              </div>
+
+              {/* Status */}
 
               <div>
+
                 <label className="block mb-2 text-sm font-medium">
                   Status
                 </label>
@@ -493,6 +636,7 @@ const Team = () => {
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
                 </select>
+
               </div>
 
               {/* Buttons */}
@@ -526,7 +670,6 @@ const Team = () => {
           </div>
 
         </div>
-
       )}
 
     </div>

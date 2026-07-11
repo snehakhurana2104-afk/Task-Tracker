@@ -9,6 +9,7 @@ import {
   User,
   Settings,
   LogOut,
+ 
 } from "lucide-react";
 
 import "../assets/css/sidebar.css";
@@ -17,21 +18,31 @@ import logo from "../assets/ssdn-logo.png";
 const Sidebar = () => {
   return (
     <aside className="sidebar">
+
       {/* Logo */}
+
       <div className="logo-section">
-        <img src={logo} alt="SSDN Logo" className="sidebar-logo" />
+
+        <img
+          src={logo}
+          alt="SSDN Logo"
+          className="sidebar-logo"
+        />
 
         <h2 className="sidebar-title">
-          Task Management
+          Task Tracker
         </h2>
 
         <p className="sidebar-subtitle">
           Corporate Dashboard
         </p>
+
       </div>
 
-      {/* Main Menu */}
+      {/* Menu */}
+
       <div className="sidebar-menu">
+
         <NavLink
           to="/dashboard"
           className={({ isActive }) =>
@@ -72,7 +83,10 @@ const Sidebar = () => {
           <span>Team</span>
         </NavLink>
 
-        <NavLink to="/profile/Srishti"
+       
+
+        <NavLink
+          to="/profile/Srishti"
           className={({ isActive }) =>
             isActive ? "nav-item active" : "nav-item"
           }
@@ -80,20 +94,30 @@ const Sidebar = () => {
           <User size={20} />
           <span>Profile</span>
         </NavLink>
+
       </div>
 
-      {/* Bottom Menu */}
+      {/* Footer */}
+
       <div className="sidebar-footer">
-        <div className="nav-item">
+
+        <NavLink
+          to="/settings"
+          className={({ isActive }) =>
+            isActive ? "nav-item active" : "nav-item"
+          }
+        >
           <Settings size={20} />
           <span>Settings</span>
-        </div>
+        </NavLink>
 
         <div className="nav-item logout">
           <LogOut size={20} />
           <span>Logout</span>
         </div>
+
       </div>
+
     </aside>
   );
 };

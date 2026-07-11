@@ -286,3 +286,46 @@
     }
 
 }
+.analytics-page.dark{
+    background:#0f172a;
+    color:#fff;
+}
+
+.analytics-page.dark .card{
+    background:#1e293b;
+    color:#fff;
+}
+
+.analytics-page.dark .chart-box{
+    background:#1e293b;
+    color:#fff;
+}
+
+.analytics-page.dark .analytics-table{
+    color:#fff;
+}
+
+.analytics-page.dark .analytics-table th{
+    background:#334155;
+    color:#fff;
+}
+
+.analytics-page.dark .analytics-table td{
+    background:#1e293b;
+    color:#fff;
+}
+.analytics-page.dark .card h2{
+    color:#ffffff !important;
+}
+
+.analytics-page.dark .card h4{
+    color:#cbd5e1 !important;
+}
+
+.analytics-page.dark .analytics-title{
+    color:#ffffff !important;
+}
+
+.analytics-page.dark .chart-box h3{
+    color:#ffffff !important;
+}

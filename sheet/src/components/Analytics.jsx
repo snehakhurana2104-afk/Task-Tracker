@@ -17,7 +17,7 @@ import {
 
 import logo from "../assets/ssdn-logo.png";
 
-const Analytics = ({ tasks = [] }) => {
+const Analytics = ({ tasks = [], darkMode }) => {
 
   // ===============================
   // Dashboard Summary
@@ -181,7 +181,7 @@ const Analytics = ({ tasks = [] }) => {
   ];
 
   return (
-    <div className="analytics-page">
+    <div className={`analytics-page ${darkMode ? "dark" : ""}`}>
 
       <div className="analytics-header">
 
