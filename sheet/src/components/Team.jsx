@@ -9,7 +9,6 @@ import {
   Mail,
   Phone,
   Briefcase,
-  Layers,
   X,
   AlertCircle,
   User,
