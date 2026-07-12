@@ -77,13 +77,13 @@ const Dashboard = ({
   // LOAD DATA
   // ===========================================
 
-  useEffect(() => {
-    if (parentFetchTasks) {
-      parentFetchTasks();
-    } else {
-      fetchTasks();
-    }
-  }, []);
+ useEffect(() => {
+  if (parentFetchTasks) {
+    parentFetchTasks();
+  } else {
+    fetchTasks();
+  }
+}, [parentFetchTasks]);
     // ===========================================
   // HANDLE INPUT
   // ===========================================
@@ -169,9 +169,7 @@ const Dashboard = ({
       item.remarks !== "Closed"
   ).length;
 
-  const inProcessTasks = safeTasks.filter(
-    (item) => item.remarks === "In-Process"
-  ).length;
+
 
   // ===========================================
   // COMPLETION %
