@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import "../assets/css/dashboard.css";
 
@@ -46,44 +46,39 @@ const Dashboard = ({
   // FETCH TASKS
   // ===========================================
 
-  const fetchTasks = async () => {
-    try {
-      setLoading(true);
+   const fetchTasks = useCallback(async () => {
+  try {
+    setLoading(true);
 
-      const res = await axios.get(
-        "http://localhost:5000/api/tasks"
-      );
+    const res = await axios.get(
+      "http://localhost:5000/api/tasks"
+    );
 
-      // MongoDB array safely nikalo
-      const dbTasks = Array.isArray(res.data.data)
-        ? res.data.data
-        : [];
+    const dbTasks = Array.isArray(res.data.data)
+      ? res.data.data
+      : [];
 
-      setTasks(dbTasks);
+    setTasks(dbTasks);
 
-      // Latest 5 Tasks
-      if (setRecentTasks) {
-        setRecentTasks([...dbTasks].slice(-5).reverse());
-      }
-    } catch (error) {
-      console.error("Fetch Tasks Error:", error);
-      setTasks([]);
-    } finally {
-      setLoading(false);
+    if (setRecentTasks) {
+      setRecentTasks([...dbTasks].slice(-5).reverse());
     }
-  };
-
-  // ===========================================
-  // LOAD DATA
-  // ===========================================
-
- useEffect(() => {
+  } catch (error) {
+    console.error("Fetch Tasks Error:", error);
+    setTasks([]);
+  } finally {
+    setLoading(false);
+  }
+}, [setTasks, setRecentTasks]);
+useEffect(() => {
   if (parentFetchTasks) {
     parentFetchTasks();
   } else {
     fetchTasks();
   }
-}, [parentFetchTasks]);
+}, [parentFetchTasks, fetchTasks]);
+     
+
     // ===========================================
   // HANDLE INPUT
   // ===========================================
